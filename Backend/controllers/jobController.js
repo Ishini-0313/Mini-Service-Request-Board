@@ -43,3 +43,18 @@ const getJobById = async (req, res, next) => {
         next(error);
     }
 };
+
+// insert a job
+const createJob = async (req, res, next) => {
+    const {title, description, category, location, contactName, contactEmail} = req.body;
+
+    if(!title || !description){
+        return (res.status(400).json({
+            message : "Title and description are required!"
+        }));
+    }
+
+    const job = await jobRequest.create({title, description, category, location, contactName, contactEmail});
+
+    res.status(201).json(job);
+};
