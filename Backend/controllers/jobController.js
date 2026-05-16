@@ -46,15 +46,41 @@ const getJobById = async (req, res, next) => {
 
 // insert a job
 const createJob = async (req, res, next) => {
-    const {title, description, category, location, contactName, contactEmail} = req.body;
+    try{
+        const {title, description, category, location, contactName, contactEmail} = req.body;
 
-    if(!title || !description){
-        return (res.status(400).json({
-            message : "Title and description are required!"
-        }));
+        if(!title || !description){
+            return (res.status(400).json({
+                message : "Title and description are required!"
+            }));
+        }
+
+        const job = await jobRequest.create({title, description, category, location, contactName, contactEmail});
+
+        res.status(201).json(job);
+
+    }catch(error){
+        next(error);
     }
+};
 
-    const job = await jobRequest.create({title, description, category, location, contactName, contactEmail});
 
-    res.status(201).json(job);
+// update job status
+const updateJobStatus = async (req, res, next) => {
+    try{
+        const job = await jobRequest.findById(req.params.id);
+
+        if(!job){
+            return (res.status(404).json({
+                message : "Job Not Found"
+            }));
+        }
+        const {status} = req.body;
+
+        job.status = status;
+        await job.save();
+        res.json(job);
+    }catch(error){
+        next(error);
+    }
 };
