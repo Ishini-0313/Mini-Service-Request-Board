@@ -26,6 +26,40 @@ const register = async (req, res)=>{
     res.status(201).json(user);
 };
 
-const login = ()=>{};
+const login = async (req, res)=>{
+    const {email, password} = req.body;
+
+    const user = await User.findOne({email});
+
+    if(!user){
+        return (
+            res.status(401).json({
+                message : "User does not exist"
+            })
+        );
+    }
+
+    const match = await bycrypt.compare(password, user.password);
+
+    if(!match){
+        return (
+            res.status().json({
+                message : "Incorrect Password"
+            })
+        );
+    }
+
+    const token = jwt.sign(
+        {
+            id : user._id
+        },
+        process.env.JWT_SECRET,
+        {
+            expiresIn: "7d"
+        }
+    );
+
+    res.json({token});
+};
 
 module.exports = {register, login};
