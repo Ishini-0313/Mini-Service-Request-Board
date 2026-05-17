@@ -31,9 +31,15 @@ export default function JobDetailPage() {
 
     const updateStatus = async (status) => {
         try {
+            const token = localStorage.getItem("token");
             await axios.put(
                 `http://localhost:5000/api/jobs/${params.id}`,
-                { status }
+                { status },
+                {    
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                } 
             );
 
             fetchJob();
@@ -44,8 +50,14 @@ export default function JobDetailPage() {
 
     const deleteJob = async () => {
         try {
+            const token = localStorage.getItem("token");
             await axios.delete(
-                `http://localhost:5000/api/jobs/${params.id}`
+                `http://localhost:5000/api/jobs/${params.id}`,
+                {    
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }  
             );
 
             router.push("/");
