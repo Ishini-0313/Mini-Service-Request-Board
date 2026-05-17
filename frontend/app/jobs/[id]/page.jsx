@@ -14,7 +14,7 @@ export default function JobDetailPage() {
     const fetchJob = async () => {
         try {
             const res = await axios.get(
-                `http://localhost:5000/api/jobs/${params.id}`
+                `${process.env.NEXT_PUBLIC_API_URL}/api/jobs/${params.id}`
             );
 
             setJob(res.data);
@@ -33,7 +33,7 @@ export default function JobDetailPage() {
         try {
             const token = localStorage.getItem("token");
             await axios.put(
-                `http://localhost:5000/api/jobs/${params.id}`,
+                `${process.env.NEXT_PUBLIC_API_URL}/api/jobs/${params.id}`,
                 { status },
                 {    
                     headers: {
@@ -52,7 +52,7 @@ export default function JobDetailPage() {
         try {
             const token = localStorage.getItem("token");
             await axios.delete(
-                `http://localhost:5000/api/jobs/${params.id}`,
+                `${process.env.NEXT_PUBLIC_API_URL}/api/jobs/${params.id}`,
                 {    
                     headers: {
                         Authorization: `Bearer ${token}`

@@ -10,7 +10,7 @@ export default function Home() {
   const [category, setCategory] = useState("");
 
   const fetchJobs = async () => {
-    const url = category ? `http://localhost:5000/api/jobs?category=${category}` : `http://localhost:5000/api/jobs`;
+    const url = category ? `${process.env.NEXT_PUBLIC_API_URL}/api/jobs?category=${category}` : `${process.env.NEXT_PUBLIC_API_URL}/api/jobs`;
     const res = await axios.get(url);
     setJobs(res.data);
   };

@@ -39,9 +39,15 @@ export default function NewJobPage() {
 
             setLoading(true);
 
+            const token = localStorage.getItem("token");
             await axios.post(
-                "http://localhost:5000/api/jobs",
-                form
+                `${process.env.NEXT_PUBLIC_API_URL}/api/jobs`,
+                form,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
             );
 
             router.push("/");
