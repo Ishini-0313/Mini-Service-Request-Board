@@ -1,0 +1,143 @@
+"use client";
+
+import axios from "axios";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+
+export default function LoginPage() {
+
+    const router = useRouter();
+
+    const [form, setForm] = useState({
+        email: "",
+        password: ""
+    });
+
+    const [loading, setLoading] = useState(false);
+
+    const handleChange = (e) => {
+        setForm({
+            ...form,
+            [e.target.name]: e.target.value
+        });
+    };
+
+    const handleSubmit = async (e) => {
+
+        e.preventDefault();
+
+        if (!form.email || !form.password) {
+            alert("All fields are required");
+            return;
+        }
+
+        try {
+            setLoading(true);
+            const res = await axios.post(
+                `http://localhost:5000/api/auth/login`,
+                form
+            );
+
+            // Save token
+            localStorage.setItem(
+                "token",
+                res.data.token
+            );
+
+            alert("Login Successful");
+
+            router.push("/");
+
+        } catch (error) {
+            console.log(error);
+            alert(
+                error.response?.data?.message ||
+                "Login Failed"
+            );
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
+
+            <div className="w-full max-w-md bg-white shadow-2xl rounded p-8">
+
+                <div className="text-center mb-8">
+                    <h1 className="text-3xl font-bold text-gray-800">
+                        Welcome Back
+                    </h1>
+
+                    <p className="text-gray-500 mt-2">
+                        Login to your account
+                    </p>
+                </div>
+
+                <form
+                    onSubmit={handleSubmit}
+                    className="space-y-5"
+                >
+
+                    {/* Email */}
+                    <div>
+                        <label className="block mb-2 text-sm font-semibold text-gray-700">
+                            Email Address
+                        </label>
+
+                        <input
+                            type="email"
+                            name="email"
+                            placeholder="john@example.com"
+                            value={form.email}
+                            onChange={handleChange}
+                            className="w-full border border-gray-300 rounded px-4 py-3 focus:outline-none focus:ring-4 focus:ring-blue-200"
+                        />
+                    </div>
+
+                    {/* Password */}
+                    <div>
+
+                        <label className="block mb-2 text-sm font-semibold text-gray-700">
+                            Password
+                        </label>
+
+                        <input
+                            type="password"
+                            name="password"
+                            placeholder="••••••••"
+                            value={form.password}
+                            onChange={handleChange}
+                            className="w-full border border-gray-300 rounded px-4 py-3 focus:outline-none focus:ring-4 focus:ring-blue-200"
+                        />
+                    </div>
+
+                    {/* Button */}
+                    <button
+                        type="submit"
+                        disabled={loading}
+                        className="w-full bg-gradient-to-r from-orange-400 to-orange-500 hover:from-orange-500 hover:to-orange-400 text-white py-3 rounded font-semibold shadow-lg transition duration-300"
+                    >
+                        {
+                            loading
+                                ? "Logging In..."
+                                : "Login"
+                        }
+                    </button>
+                </form>
+
+                {/* Footer */}
+                <p className="text-center text-gray-500 mt-6">
+                    Don’t have an account?
+                    <Link
+                        href="/register"
+                        className="text-blue-600 font-semibold ml-1 hover:underline"
+                    >
+                        Register
+                    </Link>
+                </p>
+            </div>
+        </div>
+    );
+}
