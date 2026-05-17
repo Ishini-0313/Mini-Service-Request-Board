@@ -66,7 +66,7 @@ project-root/
 ## 1️⃣ Clone Repository
 
 ```bash
-git clone https://github.com/Ishini-0313/Mini-Service-Request-Board
+git clone https://github.com/Ishini-0313/Mini-Service-Request-Board.git
 ```
 
 ---
